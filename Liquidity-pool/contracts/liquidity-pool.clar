@@ -44,12 +44,14 @@
 )
 
 (define-public (set-token-balance (user principal) (token (string-ascii 10)) (amount uint))
-  (asserts! (is-eq tx-sender contract-owner) err-owner-only)
-  (if (is-eq token "token-a")
-    (map-set user-token-a-balance user amount)
-    (map-set user-token-b-balance user amount)
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (if (is-eq token "token-a")
+      (map-set user-token-a-balance user amount)
+      (map-set user-token-b-balance user amount)
+    )
+    (ok true)
   )
-  (ok true)
 )
 
 (define-public (add-liquidity (amount-a uint) (amount-b uint))
