@@ -35,6 +35,10 @@
   )
 )
 
+(define-read-only (min-uint (a uint) (b uint))
+  (if (<= a b) a b)
+)
+
 (define-read-only (calculate-swap-output (input-amount uint) (input-reserve uint) (output-reserve uint))
   (let ((input-with-fee (- input-amount (/ (* input-amount (var-get trading-fee)) u10000)))
         (numerator (* input-with-fee output-reserve))
@@ -68,8 +72,8 @@
     
     (let ((lp-tokens (if (is-eq total-supply u0)
                        (sqrti (* amount-a amount-b))
-                       (min (/ (* amount-a total-supply) reserve-a)
-                            (/ (* amount-b total-supply) reserve-b)))))
+                       (min-uint (/ (* amount-a total-supply) reserve-a)
+                                 (/ (* amount-b total-supply) reserve-b)))))
       
       ;; Update user balances
       (map-set user-token-a-balance tx-sender (- user-balance-a amount-a))
